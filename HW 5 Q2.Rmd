@@ -1,0 +1,58 @@
+---
+title: "HW 5"
+author: "JAYNA CLARK"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#2. 
+
+(a) Use map_data(”state”) from mapdata library to load the data frame which has geographic information for the US
+states. Then, filter out the coordinates for California to a new data frame called california.
+
+```{r}
+library(ggplot2)
+library(tidyr)
+library(mapdata)
+library(dplyr)
+```
+
+```{r}
+states <- map_data("state")
+california <- states |>
+  filter(region == "california")
+```
+
+(b) Load wind_turbines.rda from DATA folder to your R environment and select the wind turbines located in California. You can name the new data frame with wind_ca.
+
+```{r}
+load("wind_turbines.rda")
+wind_ca <- 
+  wind_turbines|>
+  filter(t_state == "CA")
+```
+
+(c) Use ggplot() and geom_polygon() functions to visualize state of California.
+
+```{r}
+ggplot() +
+  geom_polygon(data = california, aes(x = long, y = lat, group = group),
+               fill = "lightgray", color = "black")
+```
+
+(d) Once you obtain the map, add your geom_point() function to plot wind turbine locations in CA. If your plot produces a colorbar (legend) please consider adding guides(fill=”none”) to your functions.
+
+```{r}
+ggplot() +
+  geom_polygon(data = california, aes(x = long, y = lat, group = group), fill = "lightblue3", color = "black",) +
+  geom_point(data = wind_ca, aes(x = xlong, y = ylat), color = "orangered", size = 1) +
+  guides(fill = "none") +
+  coord_fixed(1.3) +
+  labs(title = "Wind Turbine Locations in California")
+
+```
+
