@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>US Election 2016 Choropleth</title>
+    <meta charset="utf-8" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h2>2016 US Election Map</h2>
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- External JS with states data and winner info -->
+    <script src="http://www-personal.umich.edu/~bisgin/2016elections.js"></script>
+
+    <script>
+        // Create map
+        var map = L.map('map').setView([37.8, -96], 4);
+
+        // Add base layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Color by winner
+        function getColor(winner) {
+            if (winner === "Trump") {
+                return "#FF0000"; // Red
+            } else if (winner === "Clinton") {
+                return "#0000FF"; // Blue
+            } else {
+                return "#CCCCCC"; // Gray fallback
+            }
+        }
+
+        // Style each feature
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.winner),
+                weight: 2,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+        // Add GeoJSON layer
+        L.geoJson(statesData, { style: style }).addTo(map);
+    </script>
+</body>
+</html>
